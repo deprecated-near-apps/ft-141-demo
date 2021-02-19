@@ -11,7 +11,7 @@ import './App.css';
 const App = () => {
     const { state, dispatch, update } = useContext(appStore);
 
-    const { near, wallet, account, localKeys, loading } = state;
+    const { near, wallet, account, localKeys, loading, tokenBalance } = state;
 
     const onMount = () => {
         dispatch(onAppMount());
@@ -26,16 +26,20 @@ const App = () => {
 
     return (
         <div className="root">
-            <h2>1. Guest Accounts</h2>
-            <p>Set up a guest account (seed phrase + implicitAccountId) and you will also receive an access key that is added to the "contract account".</p>
-            <Keys {...{ near, update, localKeys }} />
-            <Contract {...{ near, update, localKeys, wallet, account }} />
-
+            <h2>1. Sign In with NEAR Wallet</h2>
+            <p>Sign in with a wallet that already has NEAR tokens, and you will be presented above with an option to purchase the message created by the guest account.</p>
+            <Wallet {...{ wallet, account }} />
             {
-                localKeys && <>
-                    <h2>3. Sign In with NEAR Wallet</h2>
-                    <p>Sign in with a wallet that already has NEAR tokens, and you will be presented above with an option to purchase the message created by the guest account.</p>
-                    <Wallet {...{ wallet, account }} />
+                account && <>
+                    <Contract {...{ near, update, localKeys, wallet, account, tokenBalance }} />
+                    {
+                        tokenBalance !== '0' &&
+                        <>
+                            <h2>4. Transfer to a Guest Account</h2>
+                            <p>Set up a guest account (seed phrase + implicitAccountId) and you will also receive an access key that is added to the "contract account".</p>
+                            <Keys {...{ near, update, localKeys }} />
+                        </>
+                    }
                 </>
             }
         </div>

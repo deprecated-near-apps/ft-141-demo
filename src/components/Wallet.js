@@ -6,7 +6,7 @@ export const Wallet = ({ wallet, account }) => {
 		return <>
 			<h3>Wallet Account</h3>
 			<p>Signed In: { account.accountId }</p>
-			<p>Balance: { wallet.balance }</p>
+			<p>Balance NEAR: { wallet.balance }</p>
 			<button onClick={() => wallet.signOut()}>Sign Out</button>
 		</>;
 	}

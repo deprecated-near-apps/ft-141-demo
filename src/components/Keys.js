@@ -21,6 +21,7 @@ export const Keys = ({ near, update, localKeys }) => {
 
 	useEffect(() => {
 		if (!localKeys) loadKeys();
+        fetch('http://localhost:3000').catch((e) => alert('Server Started?\n' + e.toString()))
 	}, []);
 
 	const loadKeys = async () => {

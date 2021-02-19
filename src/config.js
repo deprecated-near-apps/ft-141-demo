@@ -1,4 +1,4 @@
-const contractName = 'dev-1613740025607-8313486';
+const contractName = 'dev-1613769671893-6099897';
 
 module.exports = function getConfig(isServer = false) {
 	let config = {
@@ -15,7 +15,7 @@ module.exports = function getConfig(isServer = false) {
 			GAS: '200000000000000',
 			DEFAULT_NEW_ACCOUNT_AMOUNT: '5',
 			contractMethods: {
-				changeMethods: ['new', 'storage_deposit', 'near_deposit', 'near_withdraw', 'ft_transfer', 'ft_transfer_call'],
+				changeMethods: ['new', 'storage_deposit', 'storage_withdraw', 'near_deposit', 'near_withdraw', 'ft_transfer', 'ft_transfer_call'],
 				viewMethods: ['storage_minimum_balance', 'storage_balance_of', 'ft_balance_of'],
 			},
 		};

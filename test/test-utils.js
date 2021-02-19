@@ -55,6 +55,8 @@ async function getContract(account) {
 	});
 }
 
+const getAccountBalance = async (accountId) => (new nearAPI.Account(connection, accountId)).getAccountBalance()
+
 async function getAccount(accountId, fundingAmount = DEFAULT_NEW_ACCOUNT_AMOUNT) {
 	accountId = accountId || generateUniqueString('test');
 	const account = new nearAPI.Account(connection, accountId);
@@ -106,6 +108,7 @@ module.exports = {
 	connection,
 	keyStore,
 	getContract,
+    getAccountBalance,
 	contract,
 	contractName,
 	contractMethods,

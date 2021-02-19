@@ -81,6 +81,20 @@ trait FungibleTokenReceiver {
     fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> Promise;
 }
 
+/// self implementation
+/// use all tokens and transfer back NEAR
+trait FungibleTokenReceiver {
+    fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> U128;
+}
+
+#[near_bindgen]
+impl FungibleTokenReceiver for Contract {
+    fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> U128 {
+        Promise::new(sender_id).transfer(amount.into());
+        U128(0)
+    }
+}
+
 #[ext_contract(ext_self)]
 trait FungibleTokenResolver {
     fn ft_resolve_transfer(
