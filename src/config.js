@@ -1,6 +1,6 @@
-const contractName = 'dev-1613769671893-6099897';
+const contractName = 'dev-1613850648449-9376677';
 
-module.exports = function getConfig(isServer = false) {
+module.exports = function getConfig() {
 	let config = {
 		networkId: 'default',
 		nodeUrl: 'https://rpc.testnet.near.org',
