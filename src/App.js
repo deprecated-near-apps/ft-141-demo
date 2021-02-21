@@ -4,14 +4,14 @@ import { appStore, onAppMount } from './state/app';
 
 import { Wallet } from './components/Wallet';
 import { Contract } from './components/Contract';
-import { Keys } from './components/Keys';
+import { Guest } from './components/Guest';
 
 import './App.css';
 
 const App = () => {
     const { state, dispatch, update } = useContext(appStore);
 
-    const { near, wallet, account, localKeys, loading, tokenBalance } = state;
+    const { near, wallet, account, localKeys, loading, tokenBalance, guestTokenBalance } = state;
 
     const onMount = () => {
         dispatch(onAppMount());
@@ -34,11 +34,7 @@ const App = () => {
                     <Contract {...{ near, update, localKeys, wallet, account, tokenBalance }} />
                     {
                         tokenBalance !== '0' &&
-                        <>
-                            <h2>4. Transfer to a Guest Account</h2>
-                            <p>Set up a guest account (seed phrase + implicitAccountId) and you will also receive an access key that is added to the "contract account".</p>
-                            <Keys {...{ near, update, localKeys }} />
-                        </>
+                        <Guest {...{ near, update, localKeys, guestTokenBalance }} />
                     }
                 </>
             }

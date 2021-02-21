@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const nearAPI = require('near-api-js');
 const getConfig = require('../src/config');
-const { contractAccount, withNear, hasAccessKey } = require('./middleware/near');
-const { contractName } = getConfig();
+const { contract, contractAccount, withNear, hasAccessKey } = require('./middleware/near');
+const { contractName, GAS } = getConfig();
 const {
 	
 } = nearAPI;
@@ -23,14 +23,26 @@ app.post('/has-access-key', hasAccessKey, (req, res) => {
 	res.json({ success: true });
 });
 
+// PROTECTED (because user access key must be used to sign request from client)
+app.post('/storage-deposit', hasAccessKey, async (req, res) => {
+	const { implicitAccountId } = req.body;
+	try {
+        console.log(contract)
+        const storageMinimum = await contract.storage_minimum_balance({});
+        console.log(storageMinimum)
+		res.json(await contract.storage_deposit({ account_id: implicitAccountId }, GAS, storageMinimum));
+	} catch(e) {
+		return res.status(403).send({ error: `error registering account`, e});
+	}
+});
+
 // WARNING NO RESTRICTION ON THIS ENDPOINT
 app.post('/add-key', async (req, res) => {
 	const { publicKey } = req.body;
 	try {
-		const result = await contractAccount.addAccessKey(publicKey);
-		res.json({ success: true, result });
+		res.json(await contractAccount.addAccessKey(publicKey));
 	} catch(e) {
-		return res.status(403).send({ error: `key is already added`});
+		return res.status(403).send({ error: `key is already added`, e});
 	}
 });
 
