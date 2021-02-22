@@ -53,7 +53,19 @@ export const postJson = async ({ url, data = {} }) => {
 		method: 'POST',
 		headers: new Headers({ 'content-type': 'application/json' }),
 		body: JSON.stringify({ ...data })
-	}).then((res) => res.json());
+	}).then(async (res) => {
+        if (!res.ok) {
+            throw await res.json();
+        }
+        return res.json()
+    });
+};
+
+export const createGuestAccount = (near, key) => {
+	key.toString = () => key.secretKey;
+	near.connection.signer.keyStore.setKey(networkId, 'guests.' + contractName, key);
+	const account = new Account(near.connection, 'guests.' + contractName);
+	return account;
 };
 
 export const createAccessKeyAccount = (near, key) => {

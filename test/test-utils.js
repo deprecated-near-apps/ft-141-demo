@@ -10,7 +10,7 @@ const {
 
 /// exports
 async function initContract() {
-    /// try to call new on contract, swallow e if already initialized
+	/// try to call new on contract, swallow e if already initialized
 	try {
 		await contract.new({ owner_id: contractName });
 	} catch (e) {
@@ -19,18 +19,18 @@ async function initContract() {
 		}
 	}
 
-    /// create guests sub-account 
-    const accountId = 'guests.' + contractName
-    let guestAccount
-    try {
+	/// create guests sub-account 
+	const accountId = 'guests.' + contractName;
+	let guestAccount;
+	try {
 		guestAccount = await createAccount(accountId, DEFAULT_NEW_ACCOUNT_AMOUNT, GUESTS_ACCOUNT_SECRET);
 	} catch (e) {
 		if (!/because it already exists/.test(e.toString())) {
 			throw e;
 		}
-        guestAccount = new nearAPI.Account(connection, accountId)
-        const newKeyPair = KeyPair.fromString(GUESTS_ACCOUNT_SECRET);
-        keyStore.setKey(networkId, accountId, newKeyPair);
+		guestAccount = new nearAPI.Account(connection, accountId);
+		const newKeyPair = KeyPair.fromString(GUESTS_ACCOUNT_SECRET);
+		keyStore.setKey(networkId, accountId, newKeyPair);
 	}
 	return { contract, contractName, guestAccount };
 }
@@ -42,7 +42,7 @@ async function getContract(account) {
 	});
 }
 
-const getAccountBalance = async (accountId) => (new nearAPI.Account(connection, accountId)).getAccountBalance()
+const getAccountBalance = async (accountId) => (new nearAPI.Account(connection, accountId)).getAccountBalance();
 
 async function getAccount(accountId, fundingAmount = DEFAULT_NEW_ACCOUNT_AMOUNT) {
 	accountId = accountId || generateUniqueSubAccount();
@@ -118,7 +118,7 @@ module.exports = {
 	connection,
 	keyStore,
 	getContract,
-    getAccountBalance,
+	getAccountBalance,
 	contract,
 	contractName,
 	contractMethods,

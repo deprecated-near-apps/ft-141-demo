@@ -1,10 +1,10 @@
 const fs = require('fs');
 const nearAPI = require('near-api-js');
 const getConfig = require('../../src/config');
-const { nodeUrl, networkId, contractName, contractMethods } = getConfig(true);
+const { nodeUrl, networkId, contractName, contractMethods, GUESTS_ACCOUNT_SECRET } = getConfig();
 const {
-    keyStores: { InMemoryKeyStore },
 	Near, Account, Contract, KeyPair,
+	keyStores: { InMemoryKeyStore },
 	utils: {
 		format: {
 			parseNearAmount
@@ -13,7 +13,7 @@ const {
 } = nearAPI;
 
 const credentials = JSON.parse(fs.readFileSync(process.env.HOME + '/.near-credentials/default/' + contractName + '.json'));
-const keyStore = new InMemoryKeyStore()
+const keyStore = new InMemoryKeyStore();
 keyStore.setKey(networkId, contractName, KeyPair.fromString(credentials.private_key));
 const near = new Near({
 	networkId, nodeUrl,
@@ -24,6 +24,12 @@ const contractAccount = new Account(connection, contractName);
 contractAccount.addAccessKey = (publicKey) => contractAccount.addKey(publicKey, contractName, contractMethods.changeMethods, parseNearAmount('0.1'));
 const contract = new Contract(contractAccount, contractName, contractMethods);
 
+/// guests.contractName account and contract
+const guestAccountId = 'guests.' + contractName;
+const guestAccount = new nearAPI.Account(connection, guestAccountId);
+const newKeyPair = KeyPair.fromString(GUESTS_ACCOUNT_SECRET);
+keyStore.setKey(networkId, guestAccountId, newKeyPair);
+
 module.exports = {
 	near,
 	keyStore,
@@ -31,4 +37,5 @@ module.exports = {
 	contract,
 	contractName,
 	contractAccount,
+    guestAccount,
 };

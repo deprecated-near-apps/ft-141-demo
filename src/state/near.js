@@ -33,13 +33,13 @@ export const initNear = () => async ({ update, getState, dispatch }) => {
 	let account;
 	if (wallet.signedIn) {
 		account = wallet.account();
-        const accessKeys = await account.getAccessKeys()
-        /// check key for contract
-        const key = accessKeys.find((k) => k.access_key && k.access_key.permission && k.access_key.permission.FunctionCall && k.access_key.permission.FunctionCall.receiver_id && k.access_key.permission.FunctionCall.receiver_id === contractName)
-        if (!key) {
-            wallet.signOut();
-            return;
-        }
+		const accessKeys = await account.getAccessKeys();
+		/// check key for contract
+		const key = accessKeys.find((k) => k.access_key && k.access_key.permission && k.access_key.permission.FunctionCall && k.access_key.permission.FunctionCall.receiver_id && k.access_key.permission.FunctionCall.receiver_id === contractName);
+		if (!key) {
+			wallet.signOut();
+			return;
+		}
 		wallet.balance = formatNearAmount((await wallet.account().getAccountBalance()).available, 2);
 		await update('', { near, wallet, account });
 	}

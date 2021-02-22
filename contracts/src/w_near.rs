@@ -10,7 +10,7 @@ impl Contract {
     pub fn near_deposit(&mut self) {
         let amount = env::attached_deposit();
         assert!(amount > 0, "Requires positive attached deposit");
-        let account_id = self.get_predecessor();
+        let account_id = env::predecessor_account_id();
         self.internal_deposit(&account_id, amount);
         self.total_supply += amount;
         env::log(format!("Deposit {} NEAR to {}", amount, account_id).as_bytes());
@@ -25,24 +25,12 @@ impl Contract {
     #[payable]
     pub fn near_withdraw(&mut self, amount: U128) -> Promise {
         assert_one_yocto();
-        let amount:u128 = amount.into();
-        let account_id = self.internal_near_withdraw(amount.clone());
-        // Transferring NEAR and refunding 1 yoctoNEAR.
-        Promise::new(account_id).transfer(amount + 1)
-    }
-
-    /// TODO
-    // pub fn near_guest_transfer(&mut self, amount: U128) -> Promise {
-    //     let amount:u128 = amount.into();
-    //     let account_id = self.internal_near_withdraw(amount.clone());
-    //     Promise::new(account_id).transfer(amount)
-    // }
-
-    fn internal_near_withdraw(&mut self, amount: u128) -> AccountId {
-        let account_id = self.get_predecessor();
+        let account_id = env::predecessor_account_id();
+        let amount = amount.into();
         self.internal_withdraw(&account_id, amount);
         self.total_supply -= amount;
         env::log(format!("Withdraw {} NEAR from {}", amount, account_id).as_bytes());
-        account_id
+        // Transferring NEAR and refunding 1 yoctoNEAR.
+        Promise::new(account_id).transfer(amount + 1)
     }
 }

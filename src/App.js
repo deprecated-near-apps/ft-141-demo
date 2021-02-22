@@ -9,37 +9,37 @@ import { Guest } from './components/Guest';
 import './App.css';
 
 const App = () => {
-    const { state, dispatch, update } = useContext(appStore);
+	const { state, dispatch, update } = useContext(appStore);
 
-    const { near, wallet, account, localKeys, loading, tokenBalance, guestTokenBalance } = state;
+	const { near, wallet, account, localKeys, loading, tokenBalance, guestTokenBalance, guestNEAR } = state;
 
-    const onMount = () => {
-        dispatch(onAppMount());
-    };
-    useEffect(onMount, []);
+	const onMount = () => {
+		dispatch(onAppMount());
+	};
+	useEffect(onMount, []);
 
-    if (loading) {
-        return <div className="root">
-            <h3>Workin on it!</h3>
-        </div>;
-    }
+	if (loading) {
+		return <div className="root">
+			<h3>Workin on it!</h3>
+		</div>;
+	}
 
-    return (
-        <div className="root">
-            <h2>1. Sign In with NEAR Wallet</h2>
-            <p>Sign in with a wallet that already has NEAR tokens, and you will be presented above with an option to purchase the message created by the guest account.</p>
-            <Wallet {...{ wallet, account }} />
-            {
-                account && <>
-                    <Contract {...{ near, update, localKeys, wallet, account, tokenBalance }} />
-                    {
-                        tokenBalance !== '0' &&
-                        <Guest {...{ near, update, localKeys, guestTokenBalance }} />
-                    }
-                </>
-            }
-        </div>
-    );
+	return (
+		<div className="root">
+			<h2>1. Sign In with NEAR Wallet</h2>
+			<p>Sign in with a wallet that already has NEAR tokens, and you will be presented above with an option to purchase the message created by the guest account.</p>
+			<Wallet {...{ wallet, account }} />
+			{
+				account && <>
+					<Contract {...{ near, update, localKeys, wallet, account, tokenBalance }} />
+					{
+						tokenBalance !== '0' &&
+                        <Guest {...{ near, update, localKeys, guestTokenBalance, guestNEAR }} />
+					}
+				</>
+			}
+		</div>
+	);
 };
 
 export default App;
