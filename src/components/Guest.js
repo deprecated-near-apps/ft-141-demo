@@ -120,6 +120,14 @@ export const Guest = ({ near, update, localKeys, guestTokenBalance = '0', guestN
         update('loading', false);
     };
 
+    const handleRemove = async() => {
+        update('loading', true);
+        del(LOCAL_KEYS, localKeys)
+        update('localKeys', {});
+        loadKeys();
+        update('loading', false);
+    }
+
 
     return <>
 
@@ -173,6 +181,12 @@ export const Guest = ({ near, update, localKeys, guestTokenBalance = '0', guestN
                 <p>
                     Guess what? You have NEAR and you got it by receiving wrapped NEAR tokens to an address that had NO NEAR (native NEAR tokens) to begin with!
                 </p>
+
+                <h2>
+                    6. (Optional) Start Another Guest Account
+                    <p>Make sure you write down your seed phrase if you want to use the current account again.</p>
+                    <button onClick={() => handleRemove()}>Remove Guest Account</button>
+		        </h2>
             </>
         }
 
