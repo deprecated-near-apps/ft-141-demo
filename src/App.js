@@ -11,7 +11,12 @@ import './App.css';
 const App = () => {
 	const { state, dispatch, update } = useContext(appStore);
 
-	const { near, wallet, account, localKeys, loading, tokenBalance, guestTokenBalance, guestNEAR } = state;
+	const { 
+        loading, tabIndex,
+        near, wallet, account,
+        localKeys, tokenBalance,
+        guestTokenBalance, guestNEAR
+    } = state;
 
 	const onMount = () => {
 		dispatch(onAppMount());

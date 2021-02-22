@@ -46,6 +46,9 @@ pub struct Contract {
     
     /// PublicKey -> AccountId.
     pub guests: LookupMap<PublicKey, AccountId>,
+    
+    /// AccountId -> String.
+    pub messages: LookupMap<AccountId, String>,
 
     /// AccountID -> Account balance.
     pub accounts: LookupMap<AccountId, Balance>,

@@ -1,26 +1,22 @@
 # WARNING
 
-https://github.com/near-apps/ft-141-demo
-
-Proceed with caution.
-
-This is ONLY A TEST of the fungible token standard and a wrapped version of NEAR tokens.
-
-Even the repo for the token standard and wrapped NEAR is a WIP branch.
-
+Proceed with caution. This is ONLY A TEST of the fungible token standard and a wrapped version of NEAR tokens.
 https://github.com/near/core-contracts/tree/w-near-141/w-near-141/src
-
-
 
 # Quickstart
 
-Only the `/test/app.test.js` works.
+Working:
 
-`yarn && yarn test:deploy`
+1. Start the server: `cd server && yarn start`
+(back in root dir) 
+2. Deploy the contract and run the app test: `yarn test:deploy`
+3. Start the app: `yarn start`
 
-If you only change the JS tests use `yarn test` after `yarn test:deploy`.
+If you only change the JS tests use `yarn test`.
 
 If you change the contract run `yarn test:deploy` again.
+
+Server should restart automatically, but you may need to restart the app.
 
 ## Installation (from nearbp boilerplate)
 
