@@ -8,13 +8,6 @@ pub(crate) fn assert_one_yocto() {
     )
 }
 
-pub(crate) fn assert_attached_deposit() {
-    assert!(
-        env::attached_deposit() > 0,
-        "Requires attached deposit of at least 1 yoctoNEAR"
-    )
-}
-
 pub(crate) fn assert_self() {
     assert_eq!(
         env::predecessor_account_id(),

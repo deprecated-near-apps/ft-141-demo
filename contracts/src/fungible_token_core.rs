@@ -20,6 +20,7 @@ pub trait FungibleTokenCore {
     /// - `memo` - an optional string field in a free form to associate a memo with this transfer.
     fn ft_transfer(&mut self, receiver_id: ValidAccountId, amount: U128, memo: Option<String>);
 
+    fn ft_transfer_unsafe(&mut self, receiver_id: ValidAccountId, amount: U128, memo: Option<String>);
     /// Transfers positive `amount` of tokens from the `env::predecessor_account_id` to `receiver_id` account. Then
     /// calls `ft_on_transfer` method on `receiver_id` contract and attaches a callback to resolve this transfer.
     /// `ft_on_transfer` method must return the amount of tokens unused by the receiver contract, the remaining tokens
@@ -89,7 +90,7 @@ trait FungibleTokenReceiver {
 
 #[near_bindgen]
 impl FungibleTokenReceiver for Contract {
-    fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, msg: String) -> U128 {
+    fn ft_on_transfer(&mut self, sender_id: AccountId, amount: U128, _msg: String) -> U128 {
         Promise::new(sender_id).transfer(amount.into());
         U128(0)
     }
@@ -119,6 +120,13 @@ impl FungibleTokenCore for Contract {
     #[payable]
     fn ft_transfer(&mut self, receiver_id: ValidAccountId, amount: U128, memo: Option<String>) {
         assert_one_yocto();
+        let sender_id = env::predecessor_account_id();
+        let amount = amount.into();
+        self.internal_transfer(&sender_id, receiver_id.as_ref(), amount, memo);
+    }
+
+    /// don't add to guest keys, instead use fund_proposal_guest
+    fn ft_transfer_unsafe(&mut self, receiver_id: ValidAccountId, amount: U128, memo: Option<String>) {
         let sender_id = env::predecessor_account_id();
         let amount = amount.into();
         self.internal_transfer(&sender_id, receiver_id.as_ref(), amount, memo);

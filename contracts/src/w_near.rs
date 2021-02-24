@@ -9,6 +9,22 @@ impl Contract {
     #[payable]
     pub fn near_deposit(&mut self) {
         let amount = env::attached_deposit();
+        self.near_deposit_internal(amount);
+    }
+
+    #[payable]
+    pub fn near_deposit_with_storage(&mut self) {
+        let mut amount = env::attached_deposit();
+        let account_id = env::predecessor_account_id();
+        if self.accounts.insert(&account_id, &0).is_some() {
+            env::panic(b"The account is already registered");
+        }
+        amount = amount - u128::from(self.storage_minimum_balance());
+        self.near_deposit_internal(amount);
+    }
+
+    #[payable]
+    pub fn near_deposit_internal(&mut self, amount: Balance) {
         assert!(amount > 0, "Requires positive attached deposit");
         let account_id = env::predecessor_account_id();
         self.internal_deposit(&account_id, amount);

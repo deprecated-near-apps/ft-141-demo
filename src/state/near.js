@@ -9,6 +9,7 @@ export const {
 } = getConfig();
 
 export const {
+    KeyPair,
 	utils: {
 		format: {
 			formatNearAmount, parseNearAmount
@@ -26,6 +27,7 @@ export const initNear = () => async ({ update, getState, dispatch }) => {
 	wallet.signOut = () => {
 		signOut.call(wallet);
 		update('wallet.signedIn', false);
+		update('account', null);
 	};
 
 	wallet.signedIn = wallet.isSignedIn();
