@@ -94,9 +94,15 @@ describe('deploy contract ' + contractName, () => {
 
 	test('bob upgrades self with wNEAR', async () => {
 		const keyPair = KeyPair.fromRandom('ed25519');
+		const keyPair2 = KeyPair.fromRandom('ed25519');
 		const public_key = keyPair.publicKey.toString();
+		const public_key2 = keyPair2.publicKey.toString();
 		connection.signer.keyStore.setKey(networkId, bob, keyPair);
-        const result = await contractBob.upgrade_guest({ public_key }, GAS);
+        const result = await contractBob.upgrade_guest({
+            public_key,
+            access_key: public_key2,
+            method_names: '',
+        }, GAS);
         console.log('RESULT', result)
 		/// update account and contract for bob (bob now pays gas)
 		accountBob = new Account(connection, bob);

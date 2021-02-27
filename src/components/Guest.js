@@ -20,7 +20,7 @@ const {
     utils: { PublicKey, format: { formatNearAmount } }
 } = nearAPI;
 
-export const Guest = ({ near, update, localKeys, guestTokenBalance = '0', guestNEAR = '0', guestIsReal = false }) => {
+export const Guest = ({ near, update, wallet, localKeys, guestTokenBalance = '0', guestNEAR = '0', guestIsReal = false }) => {
     if (!near.connection) return null;
 
     const [username, setUsername] = useState('');
@@ -106,26 +106,39 @@ export const Guest = ({ near, update, localKeys, guestTokenBalance = '0', guestN
     const handleUpgrade = async () => {
 
         const { seedPhrase, secretKey, publicKey } = generateSeedPhrase();
-
         /// update account and contract for bob (bob now pays gas)
         const keyPair = KeyPair.fromString(secretKey);
         const public_key = publicKey.toString();
         const accountId = localKeys.accountId
 
+        /// adding additional access key so upgraded user doens't have to sign in with wallet
+        const { secretKey: accessSecret, publicKey: accessPublic } = generateSeedPhrase();
+        console.log(accessPublic)
+        set(`near-api-js:keystore:${accountId}:default`, accessSecret)
+        set(`undefined_wallet_auth_key`, `{"accountId":"${accountId}","allKeys":["${accessPublic}"]}`)
+
+
         const guestAccount = createGuestAccount(near, KeyPair.fromString(localKeys.accessSecret));
         const contract = getContract(guestAccount);
         update('loading', true);
         try {
-            await contract.upgrade_guest({ public_key }, GAS);
+            await contract.upgrade_guest({
+                public_key,
+                access_key: accessPublic,
+                method_names: contractMethods.changeMethods.join(',')
+            }, GAS);
         } catch (e) {
             console.warn(e);
         }
+        
+        // set to the full access key (won't have to redirect)
         near.connection.signer.keyStore.setKey(networkId, accountId, keyPair);
         localKeys.seedPhrase = seedPhrase
         set(LOCAL_KEYS, localKeys)
         update('localKeys', localKeys);
         loadKeys();
         update('loading', false);
+        window.location.reload()
     };
 
     const handleRemove = async () => {

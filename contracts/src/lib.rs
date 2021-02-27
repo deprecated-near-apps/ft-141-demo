@@ -39,6 +39,7 @@ static ALLOC: near_sdk::wee_alloc::WeeAlloc<'_> = near_sdk::wee_alloc::WeeAlloc:
 
 const ON_CREATE_ACCOUNT_CALLBACK_GAS: u64 = 20_000_000_000_000;
 /// 0.1 Fee to make account
+const ACCESS_KEY_ALLOWANCE: u128 = 100_000_000_000_000_000_000_000;
 const SPONSOR_FEE: u128 = 100_000_000_000_000_000_000_000;
 const FUNDING_AMOUNT: u128 = 500_000_000_000_000_000_000_000;
 const NO_DEPOSIT: Balance = 0;
@@ -57,13 +58,13 @@ pub struct Contract {
     pub owner_id: AccountId,
     
     /// PublicKey -> AccountId.
-    pub guests: LookupMap<PublicKey, AccountId>,
+    pub guests: LookupMap<PublicKey, AccountId>, //mally.dev-1614278832408-7883215
     
     /// AccountId -> String.
-    pub proposals: LookupMap<AccountId, Proposal>,
+    pub proposals: LookupMap<AccountId, Proposal>, //mally.dev-1614278832408-7883215
 
     /// AccountID -> Account balance.
-    pub accounts: LookupMap<AccountId, Balance>,
+    pub accounts: LookupMap<AccountId, Balance>, //mally.dev-1614278832408-7883215
 
     /// Total supply of the all token.
     pub total_supply: Balance,
@@ -121,7 +122,11 @@ impl Contract {
         }
     }
 
-    pub fn upgrade_guest(&mut self, public_key: Base58PublicKey) -> Promise {
+    pub fn upgrade_guest(&mut self,
+        public_key: Base58PublicKey,
+        access_key: Base58PublicKey,
+        method_names: String
+    ) -> Promise {
         let pk = env::signer_account_pk();
         let account_id = self.guests.get(&pk).expect("not a guest");
         let amount = self.accounts.get(&account_id).expect("no balance");
@@ -136,6 +141,12 @@ impl Contract {
         Promise::new(account_id.clone())
             .create_account()
             .add_full_access_key(public_key.into())
+            .add_access_key(
+                access_key.into(),
+                ACCESS_KEY_ALLOWANCE,
+                env::current_account_id(),
+                method_names.as_bytes().to_vec(),
+            )
             .transfer(FUNDING_AMOUNT)
             .then(ext_self::on_account_created(
                 account_id,
