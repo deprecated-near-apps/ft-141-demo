@@ -1,21 +1,32 @@
-# WARNING
+# Live App Review 11 & 12 - Access Key with App Username - Part 1 & 2 (FT NEP-141)
 
-Proceed with caution. This is ONLY A TEST of the fungible token standard and a wrapped version of NEAR tokens.
-https://github.com/near/core-contracts/tree/w-near-141/w-near-141/src
+This repo is a companion to this video:
+
+[![Live App Review 7 - Coin Flip Random Function With App Example](https://img.youtube.com/vi/-nECK5SSKcg/0.jpg)](https://youtu.be/-nECK5SSKcg)
+
+## Notes
+
+We do a demo of creating a "guest" named account for an app where the gas fees are sponsored by a special app account called "guests.APP_NAME.near". The guest account doesn't exist (sometimes called a virtual or contract account) until the user upgrades, but the name is reserved because only the app is able to create "USERNAME.APP_NAME.near".
+
+This has many advantages for user onboarding, where users can use the app immediately and later can be upgraded to a full account. The users also don't have to move any assets - namely the fungible tokens they earned as a guest user. 
+
+End Notes:
+The reason funding the account worked was that I accidentally added the full access key of the upgraded user account to the near.connection.signer. Despite the contract method needing a Wallet redirect to fund a proposal with fungible tokens, you do not need a redirect with a full access key. WARNING - you never want to require the user to put their full access key into the app.
+
+The correct way to progressively upgrade and seamlessly login the user, would be to have an "unsafe_fund_proposal" method that allows ONLY newly upgraded users to fund proposals without first signing in with the NEAR wallet.
+
+In this way, the user is still paying for their transactions after upgrading and continues seamlessly using the app without having to EVER see the NEAR wallet. Progressive Onboarding!
 
 # Quickstart
 
 Working:
 
-1. Start the server: `cd server && yarn start`
-(back in root dir) 
-2. Deploy the contract and run the app test: `yarn test:deploy`
+1. Start the server: `cd server && yarn && yarn start`
+2. (back in root dir) Deploy the contract and run the app test: `yarn test:deploy`
 3. Start the app: `yarn start`
 
 If you only change the JS tests use `yarn test`.
-
 If you change the contract run `yarn test:deploy` again.
-
 Server should restart automatically, but you may need to restart the app.
 
 ## Installation (from nearbp boilerplate)

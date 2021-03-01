@@ -117,7 +117,6 @@ export const Guest = ({ near, update, wallet, localKeys, guestTokenBalance = '0'
         set(`near-api-js:keystore:${accountId}:default`, accessSecret)
         set(`undefined_wallet_auth_key`, `{"accountId":"${accountId}","allKeys":["${accessPublic}"]}`)
 
-
         const guestAccount = createGuestAccount(near, KeyPair.fromString(localKeys.accessSecret));
         const contract = getContract(guestAccount);
         update('loading', true);
