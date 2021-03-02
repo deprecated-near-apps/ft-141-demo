@@ -2,7 +2,7 @@
 
 This repo is a companion to this video:
 
-[![Live App Review 7 - Coin Flip Random Function With App Example](https://img.youtube.com/vi/-nECK5SSKcg/0.jpg)](https://youtu.be/-nECK5SSKcg)
+[![Live App Review 12 - Access Key with App Username - Part 2 (FT NEP-141)](https://img.youtube.com/vi/-nECK5SSKcg/0.jpg)](https://youtu.be/-nECK5SSKcg)
 
 ## Notes
 
